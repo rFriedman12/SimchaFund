@@ -1,0 +1,62 @@
+﻿@using SimchaFundHW21.Data
+@model ContributionsViewModel
+
+<div class="header mt-3">
+    <h1>
+        Contributors for the @Model.Simcha.Name simcha
+    </h1>
+</div>
+<div class="table-responsive mt-3">
+    <form method="POST" action="/simchas/updatecontributions">
+        <input type="hidden" name="simchaId" value="@Model.Simcha.Id" />
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>Contribute</th>
+                <th>Name</th>
+                <th>Balance</th>
+                <th>Always Include</th>
+                <th>Amount</th>
+            </tr>
+            @{ int x = 0; }
+            @foreach (ContributorViewModel contributor in Model.Contributors)
+            {
+                <input type="hidden" name="contributors[@x].ContributorId" value="@contributor.Contributor.Id" />
+                <tr>
+                    <td>
+                        @if (contributor.Include)
+                        {
+                            <input type="checkbox" name="contributors[@x].Include" value="true" checked />
+                        }
+                        else
+                        {
+                            <input type="checkbox" name="contributors[@x].Include" value="true" />
+                        }
+
+                    </td>
+                    <td>@contributor.Contributor.FirstName @contributor.Contributor.LastName</td>
+                    <td>@contributor.Contributor.Balance.ToString("C")</td>
+                    <td style="text-align: center;">
+                        @if (contributor.Contributor.AlwaysInclude)
+                        {
+                            <span style="font-size: 25px;" class="oi oi-check"></span>
+                        }
+                    </td>
+                    <td>
+                        @*@if (contributor.Include)
+                            {
+                                <input type="text" name="contributors[x].Amount" class="form-control" value="@contributor" />
+                            }
+                            else*@
+                        <input type="text" name="contributors[@x].Amount" class="form-control" />
+                    </td>
+                    @{ x++; }
+                </tr>
+            }
+        </table>
+        <button class="btn btn-success mt-3">Update</button>
+    </form>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" />
+}
